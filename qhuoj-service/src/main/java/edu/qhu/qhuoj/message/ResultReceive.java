@@ -3,6 +3,8 @@ package edu.qhu.qhuoj.message;
 import com.rabbitmq.client.Channel;
 import edu.qhu.qhuoj.judge.Dispatcher;
 import edu.qhu.qhuoj.service.SubmissionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import java.util.Map;
 public class ResultReceive {
     @RabbitListener(queues = "${message.result.queue}")
     public void handler(Map<String, Object> resultMessage, Channel channel, Message message) {
+
         try {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         } catch (IOException e) {
@@ -41,11 +44,13 @@ public class ResultReceive {
     }
 
     private void errorHandler(Map<String, Object> resultMessage) {
+        logger.info("Error handler");
         int submissionId = (Integer) resultMessage.get("submissionId");
         eventPublisher.publishEvent(new SubmissionEvent(this, submissionId, "System Error", "System Error", true));
     }
 
     private void compilerFinishedHandler(Map<String, Object> resultMessage) {
+        logger.info("Compile finished handler");
         Integer submissionId = (Integer) resultMessage.get("submissionId");
         boolean isSuccessful = (boolean) resultMessage.get("isSuccessful");
         String log = (String) resultMessage.get("log");
@@ -58,6 +63,7 @@ public class ResultReceive {
     }
 
     private void testPointFinishedHandler(Map<String, Object> resultMessage) {
+        logger.info("Test point finished handler");
         int submissionId = (Integer) resultMessage.get("submissionId");
         int testPointId = (Integer) resultMessage.get("testPointId");
         String runningResult = (String) resultMessage.get("runningResult");
@@ -72,6 +78,7 @@ public class ResultReceive {
     }
 
     private void allTestPointFinishedHandler(Map<String, Object> resultMessage) {
+        logger.info("All test point finished handler");
         int submissionId = (Integer) resultMessage.get("submissionId");
         String runningResult = (String) resultMessage.get("runningResult");
         int totalTime = (Integer) resultMessage.get("totalTime");
@@ -90,4 +97,6 @@ public class ResultReceive {
 
     @Autowired
     ApplicationEventPublisher eventPublisher;
+
+    private final Logger logger = LoggerFactory.getLogger(ResultReceive.class);
 }

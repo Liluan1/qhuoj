@@ -1,11 +1,10 @@
 package edu.qhu.qhuoj.service;
 
-import edu.qhu.qhuoj.message.ResultSender;
-import edu.qhu.qhuoj.message.SubmissionSender;
-import org.springframework.amqp.core.Queue;
+import edu.qhu.qhuoj.message.MessageSender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -14,11 +13,13 @@ import java.util.Map;
 public class MessageService {
 
     public void sendSubmissionMessage(Map<String, Object> message){
-        submissionSender.sendMessage(submissionQueue, message);
+        logger.info("Send submission message");
+        messageSender.sendMessage(submissionQueue, message);
     }
 
     public void sendResultMessage(Map<String, Object> message){
-        submissionSender.sendMessage(resultQueue,message);
+        logger.info("Send result message");
+        messageSender.sendMessage(resultQueue,message);
     }
 
     @Value("${message.submission.queue}")
@@ -38,8 +39,8 @@ public class MessageService {
 //    }
 
     @Autowired
-    SubmissionSender submissionSender;
+    MessageSender messageSender;
 
-    @Autowired
-    ResultSender resultSender;
+    private final Logger logger = LoggerFactory.getLogger(MessageService.class);
+
 }

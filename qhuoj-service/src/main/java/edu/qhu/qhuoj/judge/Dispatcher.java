@@ -6,6 +6,8 @@ import edu.qhu.qhuoj.service.MessageService;
 import edu.qhu.qhuoj.service.TestpointService;
 import edu.qhu.qhuoj.service.SubmissionService;
 import edu.qhu.qhuoj.util.DigitalUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,7 @@ import java.util.Map;
 public class Dispatcher {
     public void createNewTask(int submissionId){
         synchronized (this){
+            logger.info("Create new task");
             String fileDirectory = String.format("%s/qhuoj-%s", new Object[] {workDirectory, submissionId});
             String fileName = DigitalUtils.getRandomString(12, "ALPHA");
             Submission submission = submissionService.getSubmissionById(submissionId);
@@ -33,13 +36,10 @@ public class Dispatcher {
     }
 
     private void preprocess(Submission submission, String fileDirectory, String fileName){
-        try {
-            int problemId = submission.getProblem().getId();
-            preprocessor.createTestCode(submission, fileDirectory, fileName);
-            preprocessor.fetchTestPonits(problemId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        logger.info("Processing");
+        int problemId = submission.getProblem().getId();
+        preprocessor.createTestCode(submission, fileDirectory, fileName);
+        preprocessor.fetchTestPonits(problemId);
     }
 
     public boolean compile(Submission submission, String fileDirectory, String fileName){
@@ -51,6 +51,7 @@ public class Dispatcher {
 
     private void updateSubmission(int submissionId, int usedTime, int usedMemory, int score, String judgeResult,
                                   String log){
+        logger.info("Update submisssion");
         Submission submission = new Submission();
         submission.setId(submissionId);
         submission.setUsedTime(usedTime);
@@ -62,6 +63,7 @@ public class Dispatcher {
     }
 
     private void runProgram(Submission submission, String fileDirection, String fileName) {
+        logger.info("Begin to run program");
         List<Map<String, Object>> runningResults = new ArrayList<>();
         int submissionId = submission.getId();
         int problemId = submission.getProblem().getId();
@@ -92,21 +94,25 @@ public class Dispatcher {
 
     private Map<String, Object> compareAnswer(Map<String, Object> runningResult, String outputFilePath,
                                               String stdOutputFilePath){
+        logger.info("Compare running answer");
         String runningResultAbbr = (String) runningResult.get("runningResultAbbr");
         try {
             if (runningResultAbbr.equals("AC") && !comparator.isOutputTheSame(stdOutputFilePath, outputFilePath)){
                 runningResult.put("runningResultAddr", "WA");
             }
         } catch (IOException e) {
+            logger.info("fail to compare running answer");
             e.printStackTrace();
         }
         return runningResult;
     }
 
     private void onCompileFinished(int submissionId, Map<String, Object> result){
+        logger.info("Compile finished");
         boolean isSuccessful = (boolean)result.get("isSuccessful");
         String log = (String)result.get("log");
         if (!isSuccessful){
+            logger.info("compile error");
             updateSubmission(submissionId, 0, 0, 0, "CE", log);
         }
         Map<String, Object> resultMessage = new HashMap<>();
@@ -119,6 +125,7 @@ public class Dispatcher {
     }
 
     private void onTestPointFinished(int submissionId, int testPointId, Map<String, Object> runningResult){
+        logger.info("Test point finished");
         String runningResultAbbr = (String) runningResult.get("runningResultAbbr");
         String runningResultName = resultAbbrMapper.get(runningResultAbbr);
         int usedTime = (Integer) runningResult.get("usedTime");
@@ -138,6 +145,7 @@ public class Dispatcher {
     }
 
     private void onAllTestpointFinished(int submissionId, List<Map<String, Object>> runningResults){
+        logger.info("All test point finished");
         int totalTime = 0;
         int maxMemory = 0;
         int totalScore = 0;
@@ -190,6 +198,7 @@ public class Dispatcher {
      */
     private String getJudgeLog(List<Map<String, Object>> runningResults,
                                String runningResultAbbr, int totalTime, int maxMemory, int totalScore) {
+        logger.info("Get judge log");
         int checkpointId = -1;
         String runtimeResultName = resultAbbrMapper.get(runningResultAbbr);
 
@@ -243,4 +252,7 @@ public class Dispatcher {
 
     @Value("#{${judge.resultAbbrMapper}}")
     Map<String, String> resultAbbrMapper;
+
+    private final Logger logger = LoggerFactory.getLogger(Dispatcher.class);
+
 }

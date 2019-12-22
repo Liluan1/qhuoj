@@ -1,6 +1,8 @@
 package edu.qhu.qhuoj.message;
 
 import edu.qhu.qhuoj.entity.ResponseMsg;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -14,7 +16,8 @@ import java.util.Map;
 public class SubmissionListener {
 
     @EventListener
-    public void submissionEventHandler(SubmissionEvent event) throws IOException {
+    public void submissionEventHandler(SubmissionEvent event) {
+        logger.info("Send real time message");
         int submissionId = event.getSubmissionId();
         String judgeResult = event.getJudgeResult();
         String message = event.getMessage();
@@ -24,14 +27,18 @@ public class SubmissionListener {
         resultMap.put("judgeResult", judgeResult);
         resultMap.put("message", message);
         ResponseMsg responseMsg = ResponseMsg.success(resultMap, realTimeAccessPath);
+        try {
+            if (null != sseEmitter) {
+                sseEmitter.send(responseMsg);
 
-        if (null != sseEmitter) {
-            sseEmitter.send(responseMsg);
-
-            if (isCompleted) {
-                sseEmitter.complete();
-                removeSseEmitters(submissionId);
+                if (isCompleted) {
+                    sseEmitter.complete();
+                    removeSseEmitters(submissionId);
+                }
             }
+        }catch(IOException e){
+            logger.error("Fail to send real time message");
+            e.printStackTrace();
         }
     }
 
@@ -47,4 +54,6 @@ public class SubmissionListener {
 
     @Value("${message.realTime.accessPath}")
     private String realTimeAccessPath;
+
+    private final Logger logger = LoggerFactory.getLogger(SubmissionListener.class);
 }

@@ -41,3 +41,9 @@ spring:
         acknowledge-mode: manual
       simple:
         acknowledge-mode: manual
+logging:
+  file:
+    path: /tmp/log/
+    name: qhuoj.log
+  level:
+    root: info

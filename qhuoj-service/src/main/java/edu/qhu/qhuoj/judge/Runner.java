@@ -3,6 +3,8 @@ package edu.qhu.qhuoj.judge;
 import edu.qhu.qhuoj.entity.Language;
 import edu.qhu.qhuoj.entity.Submission;
 import edu.qhu.qhuoj.util.NativeLibraryLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,7 @@ public class Runner {
 
     public Map<String, Object> getRunningResult(Submission submission, String fileDirector, String fileName,
                                                 String inputFilePath, String outputFilePath){
+        log.info("Start running");
         String abbr = null;
         String commandLine = getCommandLine(submission, fileDirector, fileName);
         int timeLimit = getTimeLimit(submission);
@@ -43,6 +46,7 @@ public class Runner {
 
 
     private String getCommandLine(Submission submission, String fileDirector, String fileName){
+        log.info("Get running command");
         Language language = submission.getLanguage();
         String filePathName = String.format("%s/%s", new Object[]{fileDirector, fileName});
         StringBuffer runCommand = new StringBuffer(language.getRunningCommand().replaceAll("\\{filename\\}",
@@ -55,6 +59,7 @@ public class Runner {
     }
 
     private int getTimeLimit(Submission submission){
+        log.info("Get running time limit");
         Language language = submission.getLanguage();
         int timeLimit = submission.getProblem().getTimeLimit();
 
@@ -65,6 +70,7 @@ public class Runner {
     }
 
     private int getMemoryLimit(Submission submission){
+        log.info("Get running memory limit");
         int memoryLimit = submission.getProblem().getMemoryLimit();
         return memoryLimit;
     }
@@ -82,6 +88,8 @@ public class Runner {
 
     @Value("${system.password}")
     private String systemPassword;
+
+    private final Logger log = LoggerFactory.getLogger(Runner.class);
 
     static {
         try {

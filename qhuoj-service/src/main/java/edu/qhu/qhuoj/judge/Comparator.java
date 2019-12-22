@@ -17,15 +17,15 @@ public class Comparator {
      */
     public boolean isOutputTheSame(String standardOutputFilePath,
                                    String outputFilePath) throws IOException {
+
         File stdFile = new File(standardOutputFilePath);
         File file = new File(outputFilePath);
 
-        LineIterator stdFileItr = FileUtils.lineIterator(stdFile, "UTF-8");
-        LineIterator fileItr = FileUtils.lineIterator(file, "UTF-8");
+        LineIterator stdFileItr = null;
+        LineIterator fileItr = null;
+        stdFileItr = FileUtils.lineIterator(stdFile, "UTF-8");
+        fileItr = FileUtils.lineIterator(file, "UTF-8");
         boolean isFileOutputTheSame = isFileOutputTheSame(stdFileItr, fileItr);
-
-//        LineIterator.closeQuietly(stdFileItr);
-//        LineIterator.closeQuietly(fileItr);
         return isFileOutputTheSame;
     }
 
@@ -117,4 +117,5 @@ public class Comparator {
         }
         return true;
     }
+
 }

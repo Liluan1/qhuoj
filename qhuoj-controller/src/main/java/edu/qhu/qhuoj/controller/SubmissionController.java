@@ -42,7 +42,11 @@ public class SubmissionController {
     }
 
     @RequestMapping(value = "realtime/{id}", method = RequestMethod.GET)
-    public SseEmitter getRealTimeSubmission(@PathVariable int id){
+    public Object getRealTimeSubmission(@PathVariable int id, HttpServletRequest request){
+        Submission findSubmission = submissionService.getSubmissionById(id);
+        if (null != findSubmission.getJudgeResult()){
+            return ResponseMsg.success(findSubmission, request.getServletPath());
+        }
         SseEmitter sseEmitter = new SseEmitter(0L);
         submissionListener.addSseEmitters(id, sseEmitter);
         return sseEmitter;
