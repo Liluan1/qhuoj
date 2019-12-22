@@ -1,0 +1,43 @@
+message:
+  submission:
+    queue: qhuoj.submission
+  result:
+    queue: qhuoj.result
+  realTime:
+    accessPath: submissions/realtime
+
+
+judge:
+  workDir: /tmp
+  testPointDir: /tmp/qhuoj-testpoints
+  resultAbbrMapper: "{PD: 'Pending',AC: 'Accepted',WA: 'Wrong Answer',TLE: 'Time Limit Exceed',MLE: 'Memory Limit
+  Exceed',RE: 'Runtime Error',CE: 'Compile Error'}"
+
+
+system:
+  username: qhuoj
+  password: qhuoj
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/qhuoj
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  thymeleaf:
+    cache: false
+  rabbitmq:
+    host: 150.109.123.174
+    username: qhuoj
+    password: qhuoj
+    publisher-confirms: true
+    publisher-returns: true
+    listener:
+      direct:
+        acknowledge-mode: manual
+      simple:
+        acknowledge-mode: manual

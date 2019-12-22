@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>edu.qhu.qhuoj</groupId>
+        <artifactId>qhuoj</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+<!--    <groupId>edu.qhu.qhuoj</groupId>-->
+    <artifactId>qhuoj-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <name>qhuoj-service</name>
+    <description>Demo project for Spring Boot</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>edu.qhu.qhuoj</groupId>
+            <artifactId>qhuoj-repository</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.qhu.qhuoj</groupId>
+            <artifactId>qhuoj-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <target name="Compile JNI C Library"
+                                    description="Generate headers and compile the native code">
+
+                                <echo>Generating JNI headers</echo>
+                                <exec executable="javah">
+                                    <arg value="-d" />
+                                    <arg value="${project.basedir}/src/main/cpp" />
+                                    <arg value="-classpath" />
+                                    <arg
+                                        value="${project.build.outputDirectory};C:\Users\Liluan\IdeaProjects\qhuoj\qhuoj-entity\target\classes;C:\Users\Liluan\IdeaProjects\qhuoj\qhuoj-controller\target\classes;C:\Users\Liluan\IdeaProjects\qhuoj\qhuoj-util\target\classes;C:\Users\Liluan\.m2\repository\javax\persistence\javax.persistence-api\2.2\javax.persistence-api-2.2.jar" />
+                                    <arg value="-force" />
+                                    <arg value="edu.qhu.qhuoj.judge.Runner" />
+                                </exec>
+                                <echo>Generating dynamic-link library</echo>
+                                <exec executable="make"></exec>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
