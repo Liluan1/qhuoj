@@ -52,6 +52,16 @@ public class UserService {
         return null;
     }
 
+    public User getUserByUsernameAndPassword(String username, String password){
+        String encodedPassword = EncryptionUtils.md5Encode(password);
+        User findUser = userRepository.findByUsernameAndPassword(username, encodedPassword);
+        if(null != findUser){
+            findUser.setPassword("*********");
+            return findUser;
+        }
+        return null;
+    }
+
     public List<User> getAllStudent(){
         List<User> findstudents = userRepository.findAll();
         for (User user : findstudents){

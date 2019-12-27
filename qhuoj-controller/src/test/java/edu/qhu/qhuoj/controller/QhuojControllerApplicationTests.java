@@ -1,9 +1,9 @@
 package edu.qhu.qhuoj.controller;
 
-import edu.qhu.qhuoj.entity.Testpoint;
+import edu.qhu.qhuoj.entity.TestPoint;
 import edu.qhu.qhuoj.judge.Runner;
 import edu.qhu.qhuoj.service.MessageService;
-import edu.qhu.qhuoj.service.TestpointService;
+import edu.qhu.qhuoj.service.TestPointService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +15,7 @@ import java.util.Map;
 class QhuojControllerApplicationTests {
     @Test
     void contextLoads() {
-        List<Testpoint> findTestPoint = testpointService.getTestPointByProblemId(1);
+        List<TestPoint> findTestPoint = testpointService.getTestPointByProblemId(1);
         System.out.println(findTestPoint);
     }
 
@@ -30,7 +30,7 @@ class QhuojControllerApplicationTests {
     @Autowired
     MessageService messageService;
     @Autowired
-    TestpointService testpointService;
+    TestPointService testpointService;
     @Autowired
     Runner compileRunner;
 }

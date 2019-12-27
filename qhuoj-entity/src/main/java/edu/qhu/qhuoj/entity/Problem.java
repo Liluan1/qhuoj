@@ -64,6 +64,14 @@ public class Problem {
         this.memoryLimit = memoryLimit;
     }
 
+    public int getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(int totalScore) {
+        this.totalScore = totalScore;
+    }
+
     @Override
     public String toString() {
         return "Problem{" +
@@ -97,4 +105,7 @@ public class Problem {
 
     @Column(name = "problem_memoryLimit")
     private int memoryLimit;
+
+    @Column(name = "problem_total_score")
+    private int totalScore;
 }

@@ -1,5 +1,6 @@
 package edu.qhu.qhuoj.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import edu.qhu.qhuoj.entity.ResponseMsg;
 import edu.qhu.qhuoj.entity.User;
 import edu.qhu.qhuoj.service.UserService;
@@ -18,6 +19,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseMsg studentRegister(@RequestBody User user, HttpServletRequest request, HttpServletResponse response){
+
         User newUser = userService.addStudent(user);
         if (null == newUser){
             response.setStatus(500);
@@ -46,6 +48,18 @@ public class UserController {
             return ResponseMsg.error("User Not Found", request.getServletPath());
         }
         return ResponseMsg.success(findstudent, request.getServletPath());
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ResponseMsg studentLogin(@RequestBody JSONObject jsonObject, HttpServletRequest request, HttpServletResponse response){
+        String username = jsonObject.getString("username");
+        String password = jsonObject.getString("password");
+        User findUser = userService.getUserByUsernameAndPassword(username, password);
+        if (null == findUser){
+            response.setStatus(500);
+            return ResponseMsg.error("User Not Found", request.getServletPath());
+        }
+        return ResponseMsg.success(findUser, request.getServletPath());
     }
 
     @RequestMapping(value = "all", method = RequestMethod.GET)

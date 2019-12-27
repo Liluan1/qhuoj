@@ -16,6 +16,7 @@ public class ProblemService {
 
     public List<Problem> addProblems(List<Problem> problems){
         for (Problem problem : problems){
+            problem.setTotalScore(0);
             Problem findProblem = problemRepository.findByName(problem.getName());
             if (null != findProblem){
                 problems.remove(problem);
@@ -29,6 +30,7 @@ public class ProblemService {
         if (null != findProblem) {
             return null;
         }
+        problem.setTotalScore(0);
         return problemRepository.save(problem);
     }
 

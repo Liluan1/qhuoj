@@ -1,9 +1,9 @@
 package edu.qhu.qhuoj.judge;
 
-import edu.qhu.qhuoj.entity.Testpoint;
+import edu.qhu.qhuoj.entity.TestPoint;
 import edu.qhu.qhuoj.entity.Submission;
 import edu.qhu.qhuoj.service.MessageService;
-import edu.qhu.qhuoj.service.TestpointService;
+import edu.qhu.qhuoj.service.TestPointService;
 import edu.qhu.qhuoj.service.SubmissionService;
 import edu.qhu.qhuoj.util.DigitalUtils;
 import org.slf4j.Logger;
@@ -67,8 +67,8 @@ public class Dispatcher {
         List<Map<String, Object>> runningResults = new ArrayList<>();
         int submissionId = submission.getId();
         int problemId = submission.getProblem().getId();
-        List<Testpoint> testpoints = testpointService.getTestPointByProblemId(problemId);
-        for (Testpoint testpoint : testpoints){
+        List<TestPoint> testPoints = testpointService.getTestPointByProblemId(problemId);
+        for (TestPoint testpoint : testPoints){
             int testpointId = testpoint.getId();
             int testpointScore = testpoint.getScore();
             String inputFilePath = String.format("%s/%s/input#%s.txt", new Object[]{testPointDirectory,problemId,
@@ -233,7 +233,7 @@ public class Dispatcher {
     Compiler compiler;
 
     @Autowired
-    TestpointService testpointService;
+    TestPointService testpointService;
 
     @Autowired
     Runner runner;

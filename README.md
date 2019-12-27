@@ -80,7 +80,7 @@
   - 改 *PUT*
   - 查 *GET*  参数 .../{exp} 可以是 id 和 name
     - example: /problems/1 /problems/A+B
-- 测试点 /testpoints
+- 测试点 /testPoints
   - 增 *POST* 
     - 字段：input output score problem 
     - *problem 对象中的 id 为外键*

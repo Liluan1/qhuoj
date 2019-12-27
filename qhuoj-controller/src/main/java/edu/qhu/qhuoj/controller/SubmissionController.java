@@ -41,6 +41,12 @@ public class SubmissionController {
         return ResponseMsg.success(findSubmission, request.getServletPath());
     }
 
+    @RequestMapping(value = "/userId/{id}", method = RequestMethod.GET)
+    public ResponseMsg getSubmissionByUserId(@PathVariable("id") int userId, HttpServletRequest request){
+        List<Submission> findSubmissions = submissionService.getSubmissionByUserId(userId);
+        return ResponseMsg.success(findSubmissions, request.getServletPath());
+    }
+
     @RequestMapping(value = "realtime/{id}", method = RequestMethod.GET)
     public Object getRealTimeSubmission(@PathVariable int id, HttpServletRequest request){
         Submission findSubmission = submissionService.getSubmissionById(id);

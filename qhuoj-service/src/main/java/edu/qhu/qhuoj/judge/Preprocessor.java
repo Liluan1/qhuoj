@@ -1,9 +1,9 @@
 package edu.qhu.qhuoj.judge;
 
-import edu.qhu.qhuoj.entity.Testpoint;
+import edu.qhu.qhuoj.entity.TestPoint;
 import edu.qhu.qhuoj.entity.Language;
 import edu.qhu.qhuoj.entity.Submission;
-import edu.qhu.qhuoj.service.TestpointService;
+import edu.qhu.qhuoj.service.TestPointService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,10 +66,10 @@ public class Preprocessor {
         if (!testPointsFile.exists() && !testPointsFile.mkdirs()) {
             log.error("Failed to create testpoint diectory: " + testPointDirectory);
         }
-        List<Testpoint> testPoints = testpointService.getTestPointByProblemId(problemId);
+        List<TestPoint> testPoints = testpointService.getTestPointByProblemId(problemId);
         try {
             log.info("Create test point file");
-            for (Testpoint testpoint : testPoints) {
+            for (TestPoint testpoint : testPoints) {
                 int testPointId = testpoint.getId();
                 {
                     String filePath = String.format("%s/input#%s.txt", testPointDirectory, testPointId);
@@ -97,7 +97,7 @@ public class Preprocessor {
     String testPointDirectory;
 
     @Autowired
-    TestpointService testpointService;
+    TestPointService testpointService;
 
     private final Logger log = LoggerFactory.getLogger(Preprocessor.class);
 

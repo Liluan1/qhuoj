@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface SubmissionRepository extends JpaRepository<Submission, Integer> {
+import java.util.List;
 
+public interface SubmissionRepository extends JpaRepository<Submission, Integer> {
+    List<Submission> findByUser_Id(int userId);
 }

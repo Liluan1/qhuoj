@@ -1,7 +1,8 @@
 package edu.qhu.qhuoj.entity;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 public class ResponseMsg {
     private String time;
@@ -10,14 +11,16 @@ public class ResponseMsg {
     private String path;
 
     public static ResponseMsg error(Object message, String path){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String time = dateFormat.format(new Date());
+        LocalDateTime rightNow = LocalDateTime.now();
+        String time = rightNow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        // String time = dateFormat.format(new Date());
         return new ResponseMsg(time, "error", message, path);
     }
 
     public static ResponseMsg success(Object message, String path){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String time = dateFormat.format(new Date());
+        LocalDateTime rightNow = LocalDateTime.now();
+        String time = rightNow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         return new ResponseMsg(time, "success", message, path);
     }
 

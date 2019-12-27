@@ -30,7 +30,7 @@ $(EXECUTABLE): $(OBJECTS)
 
 
 $(OBJECTS): $(SOURCES)
-	mkdir -p target\cpp
+	mkdir target\cpp
 	$(CC) $(CFLAGS) $< -o $@
 
 

@@ -3,7 +3,6 @@ package edu.qhu.qhuoj.entity;
 import org.hibernate.annotations.Target;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "submission")

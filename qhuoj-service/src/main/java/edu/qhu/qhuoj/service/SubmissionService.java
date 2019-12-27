@@ -1,6 +1,7 @@
 package edu.qhu.qhuoj.service;
 
 import edu.qhu.qhuoj.entity.Submission;
+import edu.qhu.qhuoj.entity.User;
 import edu.qhu.qhuoj.repository.SubmissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,18 @@ public class SubmissionService {
             return findSubmission;
         }
         return null;
+    }
+
+    public List<Submission> getSubmissionByUserId(int id){
+        List<Submission> findSubmissions = submissionRepository.findByUser_Id(id);
+        if(null != findSubmissions){
+            for (Submission submission : findSubmissions){
+                User user = submission.getUser();
+                user.setPassword("*********");
+                submission.setUser(user);
+            }
+        }
+        return findSubmissions;
     }
 
     public Submission addSubmission(Submission submission){

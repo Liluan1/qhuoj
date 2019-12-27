@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "checkpoint")
-public class Testpoint {
+public class TestPoint {
 
     public int getId() {
         return id;

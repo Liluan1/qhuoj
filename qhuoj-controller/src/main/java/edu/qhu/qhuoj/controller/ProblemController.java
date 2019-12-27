@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController()
@@ -36,7 +38,7 @@ public class ProblemController {
         return ResponseMsg.success(newProblems, request.getServletPath());
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "all", method = RequestMethod.GET)
     public ResponseMsg getAllProblems(HttpServletRequest request){
         return ResponseMsg.success(problemService.getAllProblems(), request.getServletPath());
     }
@@ -45,12 +47,14 @@ public class ProblemController {
     public ResponseMsg getProblem(@PathVariable("exp") String exp, HttpServletRequest request, HttpServletResponse response){
         boolean result = exp.matches("[0-9]+");
         if(result) {
+            List<Problem> problems = new ArrayList<>();
             Problem findProblem = problemService.getProblemById(Integer.parseInt(exp));
+            problems.add(findProblem);
             if (null == findProblem){
                 response.setStatus(500);
                 return ResponseMsg.error("Problem Not Found", request.getServletPath());
             }
-            return ResponseMsg.success(findProblem, request.getServletPath());
+            return ResponseMsg.success(problems, request.getServletPath());
         }else {
             List<Problem> findProblems = problemService.getProblemByName(exp);
             if (null == findProblems){
